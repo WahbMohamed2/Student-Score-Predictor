@@ -17,8 +17,7 @@ st.set_page_config(
 )
 
 # Custom CSS styling inspired by the progress report design
-st.markdown(
-    """
+st.markdown("""
 <style>
     /* Import Google Fonts */
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
@@ -183,44 +182,34 @@ st.markdown(
         color: #555;
     }
 </style>
-""",
-    unsafe_allow_html=True,
-)
+""", unsafe_allow_html=True)
 
 # Logo
 try:
     from PIL import Image
-
     logo = Image.open("./assets/image.png")
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         st.image(logo, use_container_width=True)
 except:
-    st.markdown(
-        """
+    st.markdown("""
     <div style='text-align: center; margin-bottom: 1rem;'>
         <div style='display: inline-block; border: 2px dashed #8a9a7a; padding: 20px 40px; border-radius: 5px;'>
             <p style='margin: 0; color: #8a9a7a; font-size: 0.9rem; font-weight: 600;'>YOUR LOGO</p>
         </div>
     </div>
-    """,
-        unsafe_allow_html=True,
-    )
+    """, unsafe_allow_html=True)
 
 st.title("Student Score Predictor")
 st.markdown("""
 Enter student information below to predict their exam score based on lifestyle factors.
 """)
 
-
 # Define input fields
 def user_input_features():
     # Personal Information Section
-    st.markdown(
-        '<div class="section-header">📋 Personal Information</div>',
-        unsafe_allow_html=True,
-    )
-
+    st.markdown('<div class="section-header">📋 Personal Information</div>', unsafe_allow_html=True)
+    
     col1, col2 = st.columns(2)
     with col1:
         age = st.number_input("Age", min_value=10, max_value=100, value=18)
@@ -230,13 +219,10 @@ def user_input_features():
             "Parental Education Level", ["High School", "Bachelor", "Master"]
         )
         part_time_job = st.selectbox("Part-Time Job", ["No", "Yes"])
-
+    
     # Academic Information Section
-    st.markdown(
-        '<div class="section-header">📚 Academic Information</div>',
-        unsafe_allow_html=True,
-    )
-
+    st.markdown('<div class="section-header">📚 Academic Information</div>', unsafe_allow_html=True)
+    
     col1, col2 = st.columns(2)
     with col1:
         study_hours_per_day = st.number_input(
@@ -250,13 +236,10 @@ def user_input_features():
         extracurricular_participation = st.selectbox(
             "Extracurricular Participation", ["No", "Yes"]
         )
-
+    
     # Lifestyle Information Section
-    st.markdown(
-        '<div class="section-header">🌟 Lifestyle & Wellness</div>',
-        unsafe_allow_html=True,
-    )
-
+    st.markdown('<div class="section-header">🌟 Lifestyle & Wellness</div>', unsafe_allow_html=True)
+    
     col1, col2 = st.columns(2)
     with col1:
         sleep_hours = st.number_input(
@@ -305,14 +288,15 @@ input_df = user_input_features()
 if st.button("Predict Exam Score"):
     input_prepared = preprocessor.transform(input_df)
     prediction = model.predict(input_prepared)
-    st.success(f"Predicted Exam Score: {prediction[0]:.2f}")
-
+    
+    # Cap the score between 0 and 100
+    predicted_score = max(0, min(100, prediction[0]))
+    
+    st.success(f"Predicted Exam Score: {predicted_score:.2f}")
+    
     # Grade Scale Reference
-    st.markdown(
-        '<div class="grade-scale">Grade Scale Reference</div>', unsafe_allow_html=True
-    )
-    st.markdown(
-        """
+    st.markdown('<div class="grade-scale">Grade Scale Reference</div>', unsafe_allow_html=True)
+    st.markdown("""
     <div class="grade-table">
         <div class="grade-row"><span><b>A+ 97-100</b></span><span><b>C 70-76</b></span></div>
         <div class="grade-row"><span>A 90-96</span><span>D+ 67-69</span></div>
@@ -320,16 +304,11 @@ if st.button("Predict Exam Score"):
         <div class="grade-row"><span>B 80-86</span><span>F 26-59</span></div>
         <div class="grade-row"><span>C+ 77-79</span><span>F 1-25</span></div>
     </div>
-    """,
-        unsafe_allow_html=True,
-    )
+    """, unsafe_allow_html=True)
 
 # Footer
-st.markdown(
-    """
+st.markdown("""
 <div style='text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 2px solid #e0e0d0; color: #888; font-size: 0.9rem;'>
     <p>Student Performance Prediction System</p>
 </div>
-""",
-    unsafe_allow_html=True,
-)
+""", unsafe_allow_html=True)
